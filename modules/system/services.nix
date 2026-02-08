@@ -8,56 +8,24 @@
   # Enable Flatpak
   services.flatpak.enable = true;
 
-  # Add Flathub repository declaratively
-  systemd.services.flatpak-repo = {
-    wantedBy = [ "multi-user.target" ];
-    path = [ pkgs.flatpak ];
-    script = ''
-      flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    '';
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-    };
-  };
-
-  # Install DBeaver from Flathub
-  systemd.services.flatpak-dbeaver = {
-    wantedBy = [ "multi-user.target" ];
-    after = [ "flatpak-repo.service" "network-online.target" ];
-    wants = [ "network-online.target" ];
-    requires = [ "flatpak-repo.service" ];
-    path = [ pkgs.flatpak ];
-    script = ''
-      # Check if already installed
-      if ! flatpak list | grep -q io.dbeaver.DBeaverCommunity; then
-        flatpak install -y --noninteractive flathub io.dbeaver.DBeaverCommunity || true
-      fi
-    '';
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-    };
-  };
-
-  # Install Spotify from Flathub
-  systemd.services.flatpak-spotify = {
-    wantedBy = [ "multi-user.target" ];
-    after = [ "flatpak-repo.service" "network-online.target" ];
-    wants = [ "network-online.target" ];
-    requires = [ "flatpak-repo.service" ];
-    path = [ pkgs.flatpak ];
-    script = ''
-      # Check if already installed
-      if ! flatpak list | grep -q com.spotify.Client; then
-        flatpak install -y --noninteractive flathub com.spotify.Client || true
-      fi
-    '';
-    serviceConfig = {
-      Type = "oneshot";
-      RemainAfterExit = true;
-    };
-  };
+  # Set up Flatpak repository and install apps using system activation script
+  # This runs after the system is fully up, avoiding boot-time failures
+  system.activationScripts.flatpak-setup = lib.stringAfter [ "etc" ] ''
+    # Add Flathub repository if not already added
+    if ! ${pkgs.flatpak}/bin/flatpak remotes | grep -q flathub; then
+      ${pkgs.flatpak}/bin/flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    fi
+    
+    # Install DBeaver if not already installed (runs in background to not block boot)
+    if ! ${pkgs.flatpak}/bin/flatpak list | grep -q io.dbeaver.DBeaverCommunity; then
+      (${pkgs.flatpak}/bin/flatpak install -y --noninteractive flathub io.dbeaver.DBeaverCommunity &)
+    fi
+    
+    # Install Spotify if not already installed (runs in background to not block boot)
+    if ! ${pkgs.flatpak}/bin/flatpak list | grep -q com.spotify.Client; then
+      (${pkgs.flatpak}/bin/flatpak install -y --noninteractive flathub com.spotify.Client &)
+    fi
+  '';
 
   # Enable the OpenSSH daemon
   # services.openssh.enable = true;
@@ -70,3 +38,4 @@
   #   enableSSHSupport = true;
   # };
 }
+
