@@ -1,71 +1,18 @@
-# Home Manager configuration for alexander
-{ config, pkgs, ... }:
-
-let
-  # dotfiles = "${config.home.homeDirectory}/nixos-configs/config";
-  create_symlink = path: config.lib.file.mkOutOfStoreSymlink path;
-
-  # Uncomment and configure when you want to use dotfiles
-  configs = {
-    # qtile = "qtile";
-    # nvim = "nvim";
-    # alacritty = "alacritty";
-    # rofi = "rofi";
-  };
-in
+ # User configuration for alexander
+{ config, lib, pkgs, ... }:
 
 {
-  home.username = "alexander";
-  home.homeDirectory = "/home/alexander";
-  home.stateVersion = "25.05";
-
-  # Enable Git
-  programs.git = {
-    enable = true;
-    userName = "Alexander Nitiola";
-    userEmail = "cre8tor.alexander@gmail.com";
-
-    extraConfig = {
-      init.defaultBranch = "main";   # equivalent to git config --global init.defaultBranch main
-      pull.rebase = false;            # equivalent to git config --global pull.rebase false
-    };
-  };
-
-  # Enable and configure Bash
-  programs.bash = {
-    enable = true;
-    shellAliases = {
-      btw = "echo I use nixos, btw";
-    };
-  };
-
-  # Enable and configure Zsh
-  programs.zsh = {
-    enable = true;
-    plugins = [
-      {
-        name = "spaceship";
-        src = pkgs.spaceship-prompt;
-        file = "share/zsh/site-functions/prompt_spaceship_setup";
-      }
+  # Define user account
+  users.users.alexander = {
+    isNormalUser = true;
+    extraGroups = [ 
+      "wheel"   # Enable 'sudo' for the user
+      "docker"  # Docker access
+      "git"     # Git access
+    ];
+    shell = pkgs.zsh;
+    packages = with pkgs; [
+      tree
     ];
   };
-
-  # User packages
-  home.packages = with pkgs; [
-    neovim
-    ripgrep
-    nil
-    nixpkgs-fmt
-    nodejs
-    gcc
-    postman
-    # rofi
-  ];
-
-  # XDG config files - uncomment when ready to use
-  # xdg.configFile = builtins.mapAttrs (name: subpath: {
-  #   source = create_symlink "${dotfiles}/${subpath}";
-  #   recursive = true;
-  # }) configs;
 }
