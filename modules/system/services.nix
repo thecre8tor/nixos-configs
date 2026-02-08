@@ -24,11 +24,15 @@
   # Install DBeaver from Flathub
   systemd.services.flatpak-dbeaver = {
     wantedBy = [ "multi-user.target" ];
-    after = [ "flatpak-repo.service" ];
+    after = [ "flatpak-repo.service" "network-online.target" ];
+    wants = [ "network-online.target" ];
     requires = [ "flatpak-repo.service" ];
     path = [ pkgs.flatpak ];
     script = ''
-      flatpak install -y flathub io.dbeaver.DBeaverCommunity
+      # Check if already installed
+      if ! flatpak list | grep -q io.dbeaver.DBeaverCommunity; then
+        flatpak install -y --noninteractive flathub io.dbeaver.DBeaverCommunity || true
+      fi
     '';
     serviceConfig = {
       Type = "oneshot";
@@ -39,11 +43,15 @@
   # Install Spotify from Flathub
   systemd.services.flatpak-spotify = {
     wantedBy = [ "multi-user.target" ];
-    after = [ "flatpak-repo.service" ];
+    after = [ "flatpak-repo.service" "network-online.target" ];
+    wants = [ "network-online.target" ];
     requires = [ "flatpak-repo.service" ];
     path = [ pkgs.flatpak ];
     script = ''
-      flatpak install -y flathub com.spotify.Client
+      # Check if already installed
+      if ! flatpak list | grep -q com.spotify.Client; then
+        flatpak install -y --noninteractive flathub com.spotify.Client || true
+      fi
     '';
     serviceConfig = {
       Type = "oneshot";
