@@ -1,23 +1,37 @@
+# Home Manager configuration for alexander
 { config, pkgs, ... }:
 
 let
   # dotfiles = "${config.home.homeDirectory}/nixos-configs/config";
   create_symlink = path: config.lib.file.mkOutOfStoreSymlink path;
 
+  # Uncomment and configure when you want to use dotfiles
   configs = {
     # qtile = "qtile";
     # nvim = "nvim";
     # alacritty = "alacritty";
     # rofi = "rofi";
   };
-
 in
 
 {
   home.username = "alexander";
   home.homeDirectory = "/home/alexander";
-  programs.git.enable = true;
   home.stateVersion = "25.05";
+
+  # Enable Git
+  programs.git = {
+    enable = true;
+    userName = "Alexander Nitiola";
+    userEmail = "cre8tor.alexander@gmail.com";
+
+    extraConfig = {
+      init.defaultBranch = "main";   # equivalent to git config --global init.defaultBranch main
+      pull.rebase = false;            # equivalent to git config --global pull.rebase false
+    };
+  };
+
+  # Enable and configure Bash
   programs.bash = {
     enable = true;
     shellAliases = {
@@ -25,22 +39,7 @@ in
     };
   };
 
-  # xdg.configFile = builtins.mapAttrs (name: subpath: {
-  #   source = create_symlink "${dotfiles}/${subpath}";
-  #   recursive = true;
-  # }) configs;
-
-  programs.git = {
-    userName = "Alexander Nitiola";
-    userEmail = "cre8tor.alexander@gmail.com";
-
-    # other settings...
-    extraConfig = {
-      init.defaultBranch = "main";   # equivalent to git config --global init.defaultBranch main
-      pull.rebase       = false;   # equivalent to git config --global pull.rebase false
-    };
-  };
-
+  # Enable and configure Zsh
   programs.zsh = {
     enable = true;
     plugins = [
@@ -51,7 +50,8 @@ in
       }
     ];
   };
-  
+
+  # User packages
   home.packages = with pkgs; [
     neovim
     ripgrep
@@ -59,7 +59,13 @@ in
     nixpkgs-fmt
     nodejs
     gcc
-    # rofi
     postman
+    # rofi
   ];
+
+  # XDG config files - uncomment when ready to use
+  # xdg.configFile = builtins.mapAttrs (name: subpath: {
+  #   source = create_symlink "${dotfiles}/${subpath}";
+  #   recursive = true;
+  # }) configs;
 }
