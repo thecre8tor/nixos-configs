@@ -46,6 +46,9 @@
     gnome-extension-manager
     adw-gtk3
     nerd-fonts.jetbrains-mono
+
+    # Fingerprint
+    fprintd
   ];
 
   # Fonts

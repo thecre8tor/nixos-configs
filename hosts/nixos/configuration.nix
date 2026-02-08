@@ -8,6 +8,7 @@
     ../../modules/system/networking.nix
     ../../modules/system/locale.nix
     ../../modules/system/audio.nix
+    ../../modules/system/fingerprint.nix
     ../../modules/system/services.nix
     ../../modules/system/desktop.nix
     ../../modules/system/virtualization.nix
