@@ -5,11 +5,11 @@
   services.fprintd.enable = true;
   
   security.pam.services = {
-    login.fprintAuth = true;
+    login.fprintAuth = lib.mkForce true;
     # For sudo authentication
-    sudo.fprintAuth = true;
+    sudo.fprintAuth = lib.mkForce true;
     # For display manager (if using GDM, SDDM, etc.)
-    gdm.fprintAuth = true;  # or sddm, lightdm, etc.
+    gdm.fprintAuth = lib.mkForce true;
   };
 }
 
