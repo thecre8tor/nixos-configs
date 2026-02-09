@@ -60,6 +60,7 @@ in
     nodejs
     gcc
     postman
+    lmstudio
     # rofi
   ];
 
