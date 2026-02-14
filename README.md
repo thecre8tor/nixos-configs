@@ -315,9 +315,9 @@ This configuration is personal and provided as-is for reference.
 
 **Alexander Nitiola**
 - Email: cre8tor.alexander@gmail.com
-- GitHub: [Your GitHub URL]
+- GitHub: https://github.com/thecre8tor
 
 ---
 
-**NixOS Version**: 25.11  
+**NixOS Version**: 26.05  
 **Last Updated**: February 2026
