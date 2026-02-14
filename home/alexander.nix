@@ -67,6 +67,7 @@ in
     lmstudio
     zstd
     jq
+    antares
     # rofi
   ];
 
