@@ -32,16 +32,17 @@ in
   };
 
   # Enable and configure Bash
-  programs.bash = {
-    enable = true;
-    shellAliases = {
-      btw = "echo I use nixos, btw";
-    };
-  };
+  # programs.bash = {
+  #   enable = true;
+  #   shellAliases = {
+  #     btw = "echo I use nixos, btw";
+  #   };
+  # };
 
   # Enable and configure Zsh
   programs.zsh = {
     enable = true;
+    oh-my-zsh.enable = true;    
     plugins = [
       {
         name = "spaceship";
@@ -49,6 +50,17 @@ in
         file = "share/zsh/site-functions/prompt_spaceship_setup";
       }
     ];
+    initContent = ''
+      autoload -Uz compinit
+      compinit
+
+      SPACESHIP_PROMPT_ADD_NEWLINE=true
+      SPACESHIP_RUST_SHOW=true
+
+      # Better history search: up/down only search commands starting with typed text
+      bindkey '^[[A' history-search-backward
+      bindkey '^[[B' history-search-forward
+    '';
   };
 
   # User packages
@@ -61,6 +73,8 @@ in
     gcc
     postman
     lmstudio
+    zstd
+    jq
     # rofi
   ];
 
