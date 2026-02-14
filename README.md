@@ -58,16 +58,6 @@ sudo nixos-rebuild switch --flake ~/nixos-configs#nixos
 
 ### Other Useful Commands
 
-**Test changes without activating** (temporary until reboot):
-```bash
-sudo nixos-rebuild test --flake ~/nixos-configs#nixos
-```
-
-**Build without activating** (just check if it works):
-```bash
-sudo nixos-rebuild build --flake ~/nixos-configs#nixos
-```
-
 **Update all flake inputs** (nixpkgs, home-manager):
 ```bash
 nix flake update ~/nixos-configs
@@ -76,6 +66,16 @@ nix flake update ~/nixos-configs
 **Update specific input only**:
 ```bash
 nix flake lock --update-input nixpkgs ~/nixos-configs
+```
+
+**Test changes without activating** (temporary until reboot):
+```bash
+sudo nixos-rebuild test --flake ~/nixos-configs#nixos
+```
+
+**Build without activating** (just check if it works):
+```bash
+sudo nixos-rebuild build --flake ~/nixos-configs#nixos
 ```
 
 ## 🔧 System Configuration

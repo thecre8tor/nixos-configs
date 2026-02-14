@@ -63,6 +63,6 @@
   };
 
   # Programs
-  programs.firefox.enable = true;
+  programs.firefox.enable = false;
   programs.zsh.enable = true;
 }

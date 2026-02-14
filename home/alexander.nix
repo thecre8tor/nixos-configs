@@ -31,14 +31,6 @@ in
     };
   };
 
-  # Enable and configure Bash
-  # programs.bash = {
-  #   enable = true;
-  #   shellAliases = {
-  #     btw = "echo I use nixos, btw";
-  #   };
-  # };
-
   # Enable and configure Zsh
   programs.zsh = {
     enable = true;
