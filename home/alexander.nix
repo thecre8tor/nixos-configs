@@ -26,15 +26,15 @@ in
     userEmail = "cre8tor.alexander@gmail.com";
 
     extraConfig = {
-      init.defaultBranch = "main";   # equivalent to git config --global init.defaultBranch main
-      pull.rebase = false;            # equivalent to git config --global pull.rebase false
+      init.defaultBranch = "main"; # equivalent to git config --global init.defaultBranch main
+      pull.rebase = false; # equivalent to git config --global pull.rebase false
     };
   };
 
   # Enable and configure Zsh
   programs.zsh = {
     enable = true;
-    oh-my-zsh.enable = true;    
+    oh-my-zsh.enable = true;
     plugins = [
       {
         name = "spaceship";
@@ -57,7 +57,6 @@ in
 
   # User packages
   home.packages = with pkgs; [
-    neovim
     ripgrep
     nil
     nixpkgs-fmt
@@ -68,7 +67,7 @@ in
     zstd
     jq
     antares
-    # rofi
+    lazygit
   ];
 
   # XDG config files - uncomment when ready to use
@@ -77,4 +76,3 @@ in
   #   recursive = true;
   # }) configs;
 }
-

@@ -1,5 +1,10 @@
 # Desktop environment configuration
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   # Enable the X11 windowing system
@@ -7,10 +12,21 @@
     enable = true;
     autoRepeatDelay = 200;
     autoRepeatInterval = 35;
+
+    # GNOME Desktop Setup
     displayManager.gdm.enable = true;
     desktopManager.gnome.enable = true;
+
     # windowManager.qtile.enable = true;
   };
+
+  # Sway Desktop Enviroment
+  programs.sway.enable = true;
+
+  # Recommended extra for Sway
+  security.polkit.enable = true;
+  services.dbus.enable = true;
+  programs.light.enable = true;
 
   # Alternative display manager
   # services.displayManager.ly.enable = true;

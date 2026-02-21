@@ -1,29 +1,33 @@
 # System-wide packages configuration
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   # Allow non-opensource softwares
   nixpkgs.config.allowUnfree = true;
-  
+
   # List packages installed in system profile
   # You can use https://search.nixos.org/ to find more packages (and options)
   environment.systemPackages = with pkgs; [
     # Core utilities
-    vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
-    wget
+    # vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
     git
     wezterm
     helix
 
     # Rust development tools
-    rustc          # Rust compiler
-    cargo          # Rust package manager
-    rust-analyzer  # IDE support
-    rustfmt        # Formatter
-    clippy         # Linter
-    cargo-watch    # Auto-rebuild on file changes
-    cargo-edit     # cargo add/rm commands
-    sqlx-cli
+    # rustc # Rust compiler
+    # cargo # Rust package manager
+    # rust-analyzer # IDE support
+    # rustfmt # Formatter
+    # clippy # Linter
+    # cargo-watch # Auto-rebuild on file changes
+    # cargo-edit # cargo add/rm commands
+    # sqlx-cli
     lldb
     clang
     lld
@@ -34,7 +38,6 @@
     nixfmt-rfc-style
     openssl
     openssl.dev
-    pkg-config
 
     # Desktop customization (Garuda-like)
     orchis-theme
@@ -47,8 +50,19 @@
     adw-gtk3
     nerd-fonts.jetbrains-mono
 
+    # Sway customization
+    swaylock
+    swayidle
+    waybar
+    wofi
+    foot
+
     # Fingerprint
     fprintd
+
+    # TOML language servers
+    taplo
+    tombi
   ];
 
   # Fonts
