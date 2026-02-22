@@ -20,14 +20,14 @@
     helix
 
     # Rust development tools
-    # rustc # Rust compiler
-    # cargo # Rust package manager
-    # rust-analyzer # IDE support
-    # rustfmt # Formatter
-    # clippy # Linter
-    # cargo-watch # Auto-rebuild on file changes
-    # cargo-edit # cargo add/rm commands
-    # sqlx-cli
+    rustc # Rust compiler
+    cargo # Rust package manager
+    rust-analyzer # IDE support
+    rustfmt # Formatter
+    clippy # Linter
+    cargo-watch # Auto-rebuild on file changes
+    cargo-edit # cargo add/rm commands
+    sqlx-cli
     lldb
     clang
     lld
@@ -63,6 +63,14 @@
     # TOML language servers
     taplo
     tombi
+
+    # Codelldb Seamlink
+    (pkgs.writeShellScriptBin "codelldb" ''
+      exec ${pkgs.vscode-extensions.vadimcn.vscode-lldb}/share/vscode/extensions/vadimcn.vscode-lldb/adapter/codelldb "$@"
+    '')
+
+    # Setup dotfiles repo using stow
+    stow
   ];
 
   # Fonts
