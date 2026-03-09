@@ -18,6 +18,7 @@
     git
     wezterm
     helix
+    code-cursor
 
     # Rust development tools
     rustc # Rust compiler
@@ -51,11 +52,10 @@
     nerd-fonts.jetbrains-mono
 
     # Sway customization
-    swaylock
-    swayidle
-    waybar
-    wofi
-    foot
+    # swaylock
+    # swayidle
+    # waybar
+    # wofi
 
     # Fingerprint
     fprintd

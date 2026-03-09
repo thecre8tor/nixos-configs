@@ -21,12 +21,12 @@
   };
 
   # Sway Desktop Enviroment
-  programs.sway.enable = true;
+  # programs.sway.enable = true;
 
   # Recommended extra for Sway
-  security.polkit.enable = true;
-  services.dbus.enable = true;
-  programs.light.enable = true;
+  # security.polkit.enable = true;
+  # services.dbus.enable = true;
+  # programs.light.enable = true;
 
   # Alternative display manager
   # services.displayManager.ly.enable = true;

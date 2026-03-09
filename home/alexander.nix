@@ -60,12 +60,10 @@ in
     ripgrep
     nil
     nixpkgs-fmt
-    nodejs
     gcc
     postman
     lmstudio
     zstd
-    jq
     antares
     lazygit
   ];
