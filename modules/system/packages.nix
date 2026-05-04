@@ -18,7 +18,6 @@
     git
     wezterm
     helix
-    code-cursor
 
     # Rust development tools
     rustc # Rust compiler
@@ -71,6 +70,7 @@
 
     # Setup dotfiles repo using stow
     stow
+    claude-code
   ];
 
   # Fonts

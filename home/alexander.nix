@@ -62,9 +62,7 @@ in
     nixpkgs-fmt
     gcc
     postman
-    lmstudio
     zstd
-    antares
     lazygit
   ];
 

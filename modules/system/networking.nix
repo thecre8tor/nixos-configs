@@ -1,11 +1,22 @@
 # Network configuration
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   networking.hostName = "nixos"; # Define your hostname.
 
   # Configure network connections interactively with nmcli or nmtui
   networking.networkmanager.enable = true;
+
+  # Improves the wifi speed
+  networking.networkmanager.wifi.powersave = false;
+
+  # Allow and install proprietary (non-open-source) firmware needed for hardware to work properly.
+  hardware.enableRedistributableFirmware = true;
 
   # Configure network proxy if necessary
   # networking.proxy.default = "http://user:password@proxy:port/";
