@@ -71,13 +71,33 @@
     # Setup dotfiles repo using stow
     stow
     claude-code
+    ngrok
   ];
 
   # Fonts
   fonts.packages = with pkgs; [
-    nerd-fonts.jetbrains-mono
+    # nerd-fonts.jetbrains-mono
+    noto-fonts
+    noto-fonts-cjk-sans
+    noto-fonts-color-emoji
+    liberation_ttf
+    dejavu_fonts
+    inter
+    roboto
+    jetbrains-mono
   ];
 
+  fonts.fontconfig = {
+    enable = true;
+
+    defaultFonts = {
+      serif = [ "Noto Serif" ];
+      sansSerif = [ "Inter" "Noto Sans" ];
+      monospace = [ "JetBrains Mono" ];
+      emoji = [ "Noto Color Emoji" ];
+    };
+  };
+  
   # Environment variables for development
   environment.variables = {
     RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
