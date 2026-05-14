@@ -91,8 +91,8 @@
     enable = true;
 
     defaultFonts = {
+      sansSerif = [ "Inter" ];
       serif = [ "Noto Serif" ];
-      sansSerif = [ "Inter" "Noto Sans" ];
       monospace = [ "JetBrains Mono" ];
       emoji = [ "Noto Color Emoji" ];
     };
