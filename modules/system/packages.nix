@@ -72,6 +72,8 @@
     stow
     claude-code
     ngrok
+    antares
+    redisinsight
   ];
 
   # Fonts
@@ -97,7 +99,7 @@
       emoji = [ "Noto Color Emoji" ];
     };
   };
-  
+
   # Environment variables for development
   environment.variables = {
     RUST_SRC_PATH = "${pkgs.rust.packages.stable.rustPlatform.rustLibSrc}";
