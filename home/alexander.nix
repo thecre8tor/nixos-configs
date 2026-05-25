@@ -31,6 +31,12 @@ in
     };
   };
 
+  # Enable direnv with nix-direnv for persistent dev shells
+  programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+  };
+
   # Enable and configure Zsh
   programs.zsh = {
     enable = true;
