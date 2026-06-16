@@ -13,12 +13,12 @@
     autoRepeatDelay = 200;
     autoRepeatInterval = 35;
 
-    # GNOME Desktop Setup
-    displayManager.gdm.enable = true;
-    desktopManager.gnome.enable = true;
-
     # windowManager.qtile.enable = true;
   };
+
+  # GNOME Desktop Setup
+  services.displayManager.gdm.enable = true;
+  services.desktopManager.gnome.enable = true;
 
   # Sway Desktop Enviroment
   # programs.sway.enable = true;

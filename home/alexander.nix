@@ -22,10 +22,9 @@ in
   # Enable Git
   programs.git = {
     enable = true;
-    userName = "Alexander Nitiola";
-    userEmail = "cre8tor.alexander@gmail.com";
-
-    extraConfig = {
+    settings = {
+      user.name = "Alexander Nitiola";
+      user.email = "cre8tor.alexander@gmail.com";
       init.defaultBranch = "main"; # equivalent to git config --global init.defaultBranch main
       pull.rebase = false; # equivalent to git config --global pull.rebase false
     };

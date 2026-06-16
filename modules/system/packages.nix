@@ -35,7 +35,7 @@
     # Other development tools
     typescript-language-server
     llvm
-    nixfmt-rfc-style
+    nixfmt
     openssl
     openssl.dev
 
@@ -73,7 +73,16 @@
     claude-code
     ngrok
     antares
-    (redisinsight.override { nodejs-slim_20 = pkgs.nodejs-slim_22; })
+    # Build against nodejs 22 (the default nodejs-slim_20 is EOL/insecure).
+    # nodejs 22's npm validates the package.json `devEngines` field, and
+    # redisinsight uses the legacy `devEngines.node` form which npm rejects
+    # ("Invalid property devEngines.node"), so strip it before `npm rebuild`.
+    ((redisinsight.override { nodejs-slim_20 = pkgs.nodejs-slim_22; }).overrideAttrs (old: {
+      postPatch = (old.postPatch or "") + ''
+        ${pkgs.jq}/bin/jq 'del(.devEngines)' package.json > package.json.tmp
+        mv package.json.tmp package.json
+      '';
+    }))
   ];
 
   # Fonts
