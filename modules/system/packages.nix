@@ -73,7 +73,7 @@
     claude-code
     ngrok
     antares
-    redisinsight
+    (redisinsight.override { nodejs-slim_20 = pkgs.nodejs-slim_22; })
   ];
 
   # Fonts
