@@ -74,6 +74,7 @@
     ngrok
     antares
     tiny-rdm
+    zed-editor
   ];
 
   # Fonts
