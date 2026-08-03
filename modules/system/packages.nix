@@ -40,7 +40,6 @@
     openssl.dev
 
     # Desktop customization (Garuda-like)
-    orchis-theme
     whitesur-gtk-theme
     tela-icon-theme
     papirus-icon-theme
