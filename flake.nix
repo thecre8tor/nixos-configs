@@ -26,6 +26,9 @@
                 redisinsight = nixpkgs-unstable.legacyPackages.${system}.redisinsight;
               })
             ];
+            # redisinsight is SSPL, classified as non-free by nixpkgs.
+            nixpkgs.config.allowUnfreePredicate = pkg:
+              builtins.elem (nixpkgs.lib.getName pkg) [ "redisinsight" ];
           }
           home-manager.nixosModules.home-manager
           {
