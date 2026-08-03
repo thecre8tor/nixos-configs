@@ -69,6 +69,7 @@ in
     postman
     zstd
     lazygit
+    redisinsight
   ];
 
   # XDG config files - uncomment when ready to use
