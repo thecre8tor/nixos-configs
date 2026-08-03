@@ -2,25 +2,32 @@
   description = "Alexander's NixOS Configuration";
 
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
-    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+
     home-manager = {
-      url = "github:nix-community/home-manager/release-26.05";
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, ... }:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      nixpkgs-unstable,
+      home-manager,
+      ...
+    }:
     let
       system = "x86_64-linux";
       # redisinsight is SSPL, classified as non-free by nixpkgs.
-      allowedUnfree = pkg:
-        builtins.elem (nixpkgs.lib.getName pkg) [ "redisinsight" ];
+      allowedUnfree = pkg: builtins.elem (nixpkgs.lib.getName pkg) [ "redisinsight" ];
       pkgsUnstable = import nixpkgs-unstable {
         inherit system;
         config.allowUnfreePredicate = allowedUnfree;
       };
-    in {
+    in
+    {
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
