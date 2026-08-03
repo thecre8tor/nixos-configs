@@ -19,17 +19,12 @@
     }:
     let
       system = "x86_64-linux";
-      # redisinsight is SSPL, classified as non-free by nixpkgs.
-      allowedUnfree = pkg: builtins.elem (nixpkgs.lib.getName pkg) [ "redisinsight" ];
     in
     {
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
         inherit system;
         modules = [
           ./hosts/nixos/configuration.nix
-          {
-            nixpkgs.config.allowUnfreePredicate = allowedUnfree;
-          }
           home-manager.nixosModules.home-manager
           {
             home-manager = {
