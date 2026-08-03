@@ -14,6 +14,7 @@
     ../../modules/system/desktop.nix
     ../../modules/system/virtualization.nix
     ../../modules/system/packages.nix
+    ../../modules/system/memory-pressure.nix
     ../../modules/system/nix.nix
     ../../modules/system/maintenance.nix
     ../../modules/users/alexander.nix
