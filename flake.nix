@@ -13,6 +13,13 @@
   outputs = { self, nixpkgs, nixpkgs-unstable, home-manager, ... }:
     let
       system = "x86_64-linux";
+      # redisinsight is SSPL, classified as non-free by nixpkgs.
+      allowedUnfree = pkg:
+        builtins.elem (nixpkgs.lib.getName pkg) [ "redisinsight" ];
+      pkgsUnstable = import nixpkgs-unstable {
+        inherit system;
+        config.allowUnfreePredicate = allowedUnfree;
+      };
     in {
       nixosConfigurations.nixos = nixpkgs.lib.nixosSystem {
         inherit system;
@@ -23,12 +30,10 @@
             # system stays on stable. Add more here as needed.
             nixpkgs.overlays = [
               (_final: _prev: {
-                redisinsight = nixpkgs-unstable.legacyPackages.${system}.redisinsight;
+                redisinsight = pkgsUnstable.redisinsight;
               })
             ];
-            # redisinsight is SSPL, classified as non-free by nixpkgs.
-            nixpkgs.config.allowUnfreePredicate = pkg:
-              builtins.elem (nixpkgs.lib.getName pkg) [ "redisinsight" ];
+            nixpkgs.config.allowUnfreePredicate = allowedUnfree;
           }
           home-manager.nixosModules.home-manager
           {
