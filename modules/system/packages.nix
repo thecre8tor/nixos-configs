@@ -75,6 +75,8 @@
     antares
     tiny-rdm
     zed-editor
+    dbeaver-bin
+    mission-center
   ];
 
   # Fonts

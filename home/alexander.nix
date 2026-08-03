@@ -69,6 +69,7 @@ in
     postman
     zstd
     lazygit
+    cloudflared
     redisinsight
   ];
 
