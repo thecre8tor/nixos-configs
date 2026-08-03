@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-03
 **Machine:** nixos (branch `main-edge`)
-**Outcome:** login keyring reset; old file backed up, not deleted
+**Outcome:** login keyring reset; old file kept as a backup, then deleted 2026-08-04
 **Related config:** `modules/system/fingerprint.nix`, commit `8c2b1db`
 
 ---
@@ -126,7 +126,8 @@ ever appeared, which is why retyping it could not work.
 ## Resolution
 
 The June password could not be recalled, so the keyring was reset. The old file was
-**moved, not deleted**, so it stays recoverable if the password resurfaces:
+initially moved rather than deleted, to keep it recoverable in case the password
+resurfaced:
 
 ```console
 $ mkdir -p ~/.local/share/keyring-backup
@@ -146,8 +147,11 @@ On the next login, `pam_gnome_keyring` finds no login keyring and creates a fres
 sealed with the password it just received. No manual step is needed. Because `8c2b1db`
 made password login reliable, the new keyring unlocks automatically from then on.
 
-To recover the old keyring later, move it back to
-`~/.local/share/keyrings/login.keyring` and unlock with the June password.
+**The backup was deleted on 2026-08-04**, the June password never having been
+recalled. Its contents — the GNOME Online Accounts tokens and RedisInsight
+secrets listed below — are unrecoverable by design; nothing but that password
+could ever have decrypted the file. Recovery is no longer an option, so the
+remaining sections describe what was lost, not what can be restored.
 
 ## Blast radius
 
