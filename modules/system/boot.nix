@@ -29,7 +29,9 @@ let
   #     race this may *hide* it — so a quiet week with this on is not a fix,
   #     it is evidence pointing at a race. Record that outcome rather than
   #     concluding the problem went away.
-  pmTraceDebugging = false;
+  # Enabled 2026-08-08 to hunt the wake hang. Turn back off once a magic number
+  # has been captured — this is not a setting to leave on indefinitely.
+  pmTraceDebugging = true;
 in
 
 {
