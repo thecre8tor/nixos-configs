@@ -40,6 +40,28 @@
   #   fi
   # '';
 
+  # On critical battery, power off rather than attempt a hibernate that cannot
+  # work on this machine.
+  #
+  # upower's criticalPowerAction defaults to "HybridSleep" in nixpkgs, and that
+  # default fired on 2026-08-05 at 04:08: logind logged `hybrid-sleep requested
+  # from client PID 2166 ('upowerd')`, the journal ends there, and the session
+  # was lost. It could never have succeeded — hibernation is not set up here
+  # (no boot.resumeDevice, no resume= on the cmdline) and the 4G swap partition
+  # cannot hold a 15G image in any case. See the hibernation note in
+  # memory-pressure.nix.
+  #
+  # nixpkgs only guards "Suspend" and "Ignore" behind
+  # allowRiskyCriticalPowerAction, because Hibernate/HybridSleep are normally
+  # safe — they just are not safe *here*. So the stock default is the bug.
+  #
+  # PowerOff loses unsaved work too, but it does so predictably at a known
+  # threshold instead of hanging with the battery still draining. If
+  # hibernation is ever set up properly (needs a swap device >= RAM, which
+  # means repartitioning — / is 89% full), revisit this and set it back to
+  # HybridSleep, which is the better behaviour when it actually works.
+  services.upower.criticalPowerAction = "PowerOff";
+
   # Enable the OpenSSH daemon
   # services.openssh.enable = true;
 
