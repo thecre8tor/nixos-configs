@@ -1,6 +1,37 @@
 # Boot configuration
 { config, lib, pkgs, ... }:
 
+let
+  # TEMPORARY DEBUGGING TOGGLE — flip to true to hunt the s2idle wake hang
+  # documented below, and back to false once a magic number has been captured.
+  #
+  # pm_trace writes a hash of the last-executed device resume callback into the
+  # RTC, where it survives a hard power cycle. That is the only way to identify
+  # this particular failure: the hang leaves nothing in the journal, which stops
+  # mid-line with no flush, so amd-s2idle (see packages.nix) reports beautifully
+  # on every successful cycle and says nothing at all about the one that broke.
+  #
+  # Procedure once enabled: use the machine normally. At ~26 suspends a day the
+  # hang lands roughly every 2 days. When the screen stays black, hard power off,
+  # boot, and *promptly* run:
+  #
+  #   sudo dmesg | grep -iA5 "Magic number"
+  #   cat /sys/power/pm_trace_dev_match
+  #
+  # The output names the device whose resume callback hung — attach that to the
+  # drm/amd gitlab report.
+  #
+  # Three caveats, all real:
+  #   - It scrambles the system clock. Harmless here: systemd-timesyncd is
+  #     active and synchronised, so the clock self-corrects after boot.
+  #   - Read it promptly. The RTC keeps ticking and corrupts the value.
+  #   - It disables asynchronous suspend. If the underlying bug is a timing
+  #     race this may *hide* it — so a quiet week with this on is not a fix,
+  #     it is evidence pointing at a race. Record that outcome rather than
+  #     concluding the problem went away.
+  pmTraceDebugging = false;
+in
+
 {
   # Use the systemd-boot EFI boot loader
   boot.loader.systemd-boot.enable = true;
@@ -43,5 +74,13 @@
   boot.kernelParams = [
     "mem_sleep_default=deep"
     "amdgpu.dcdebugmask=0x12"
+  ];
+
+  # Applies the toggle defined at the top of this file. Kept as tmpfiles rather
+  # than a service so it is a single declarative line with nothing to order;
+  # /sys is mounted well before systemd-tmpfiles-setup runs, and pm_trace is a
+  # persistent flag, so writing it once at boot covers every later suspend.
+  systemd.tmpfiles.rules = lib.mkIf pmTraceDebugging [
+    "w /sys/power/pm_trace - - - - 1"
   ];
 }

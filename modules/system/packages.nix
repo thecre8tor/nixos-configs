@@ -76,6 +76,19 @@
     zed-editor
     dbeaver-bin
     mission-center
+
+    # AMD's own s2idle/s0ix analysis tooling, from the maintainer of the
+    # amd_pmc driver. Provides amd-s2idle (plus amd-bios, amd-pstate,
+    # amd-ttm). Used to diagnose the Cezanne wake hang documented in
+    # boot.nix; the kernel docs point at this before filing anything at
+    # drm/amd gitlab.
+    #
+    #   sudo amd-s2idle test --count 10 --duration 30 --format html
+    #
+    # Note it only captures state *after* a successful resume, so it will
+    # never see the hard hang itself — that is what the pm_trace toggle in
+    # boot.nix is for. This provides the supporting report.
+    amd-debug-tools
   ];
 
   # Fonts
