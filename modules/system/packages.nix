@@ -88,7 +88,14 @@
     # Note it only captures state *after* a successful resume, so it will
     # never see the hard hang itself — that is what the pm_trace toggle in
     # boot.nix is for. This provides the supporting report.
-    amd-debug-tools
+    #
+    # nixpkgs only wires up dbus-fast, but validator.py's --logind path
+    # imports dbus-python. Without it the run dies on an UnboundLocalError
+    # (upstream's `except dbus.exceptions.DBusException` is evaluated before
+    # its own `except ImportError` can catch the missing module).
+    (amd-debug-tools.overridePythonAttrs (old: {
+      dependencies = old.dependencies ++ [ python3Packages.dbus-python ];
+    }))
   ];
 
   # Fonts
