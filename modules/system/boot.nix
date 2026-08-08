@@ -47,8 +47,34 @@ in
   # s2idle — display stays black on wake, requiring a hard reboot. Original
   # workaround was to force deep S3 (mem_sleep_default=deep), which worked
   # until BIOS T82 01.22.00 (2025-09-15) stopped advertising S3 entirely
-  # (`ACPI: PM: (supports S0 S4 S5)`) and HP removed the setup toggle. That
-  # param is kept in case a future firmware re-exposes S3.
+  # (`ACPI: PM: (supports S0 S4 S5)`) and HP removed the setup toggle.
+  #
+  # mem_sleep_default=deep was kept after that on the assumption it was a
+  # harmless no-op that would re-activate if firmware ever restored S3. That
+  # assumption was wrong, and `amd-s2idle test` rejected it outright on
+  # 2026-08-08:
+  #
+  #   ❌ Kernel command line is configured for 'deep' sleep
+  #   🚫 Your system does not meet s2idle prerequisites!
+  #      Adding mem_sleep_default=deep doesn't work on AMD systems.
+  #      Please remove it from the kernel command line.
+  #
+  # It is a hard prerequisite failure — the tool refuses to run any cycles
+  # while it is set — so it was actively blocking diagnosis. It also explains
+  # the triple seen on *every* suspend, where the kernel asked for deep, was
+  # refused, and fell back:
+  #
+  #   PM: suspend entry (deep) / PM: suspend exit / PM: suspend entry (s2idle)
+  #
+  # and why `ACPI: PM: Low-power S0 idle used by default` never appeared in the
+  # journal despite the FADT supporting it (amd-s2idle confirms
+  # `✅ ACPI FADT supports Low-power S0 idle` and `✅ LPS0 _DSM enabled`) — the
+  # param was overriding the default selection. Removed 2026-08-08. Do not
+  # reinstate it on this machine even if firmware restores S3; per AMD it does
+  # not work on AMD systems at all.
+  #
+  # Removing it changes the suspend path taken on every cycle, so the 292/287
+  # ratio below predates this and must be re-measured from a fresh boot.
   #
   # Fallback is amdgpu.dcdebugmask, a bitmask of DC_DEBUG_MASK. Values verified
   # against v6.18 drivers/gpu/drm/amd/include/amd_shared.h:
@@ -76,8 +102,17 @@ in
   # and re-measure the ratio above rather than trusting a handful of good wakes;
   # at ~1 in 60 the failure hides easily in a small sample.
   boot.kernelParams = [
-    "mem_sleep_default=deep"
     "amdgpu.dcdebugmask=0x12"
+  ];
+
+  # Loaded so amd-s2idle can complete its checks — without them it reports
+  # `Unable to check CPU topology: cpuid kernel module not loaded` and the
+  # equivalent for MSRs, leaving gaps in the report attached to a bug filing.
+  # Neither module does anything on its own; both just expose /dev/cpu/*/{cpuid,msr}
+  # for userspace to read.
+  boot.kernelModules = [
+    "cpuid"
+    "msr"
   ];
 
   # Applies the toggle defined at the top of this file. Kept as tmpfiles rather
