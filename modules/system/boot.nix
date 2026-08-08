@@ -29,9 +29,11 @@ let
   #     race this may *hide* it — so a quiet week with this on is not a fix,
   #     it is evidence pointing at a race. Record that outcome rather than
   #     concluding the problem went away.
-  # Enabled 2026-08-08 to hunt the wake hang. Turn back off once a magic number
-  # has been captured — this is not a setting to leave on indefinitely.
-  pmTraceDebugging = true;
+  # Off. Note that turning this off does not actively reset the flag: the rule
+  # only ever *writes* 1 at boot, so removing it just stops that happening.
+  # A running system keeps whatever value it already has until reboot, or until
+  # `echo 0 | sudo tee /sys/power/pm_trace`.
+  pmTraceDebugging = false;
 in
 
 {
