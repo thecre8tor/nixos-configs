@@ -17,23 +17,44 @@
 }:
 
 {
-  # systemd-oomd is already enabled by the NixOS default, but every slice
-  # reports ManagedOOMMemoryPressure=auto — "not opted in" — so `oomctl` showed
-  # zero monitored cgroups: the daemon ran and supervised nothing. This opts
-  # the user slices in, which is what makes it act.
+  # systemd-oomd is enabled by the NixOS default but supervises nothing: every
+  # slice reports ManagedOOMMemoryPressure=auto ("not opted in"), so `oomctl`
+  # lists zero monitored cgroups. Opting the user slices in was tried and
+  # reverted — deliberately left off now.
   #
-  # Under GNOME each application gets its own app-*.scope, so oomd kills the
-  # offending app rather than the whole session.
+  # enableUserSlices = true was set 2026-08-06 on the assumption that "under
+  # GNOME each application gets its own app-*.scope, so oomd kills the offending
+  # app rather than the whole session". That assumption is false on this
+  # machine. `oomctl` shows /user.slice holding 8.2G under real pressure
+  # (Avg300 5.80, Pgscan 236M) while user@1000.service/app.slice holds 337.8M at
+  # zero pressure — the browser, Electron apps and editor live under the shell's
+  # own unit, not under app.slice. So the only substantial kill candidate inside
+  # the monitored /user.slice is gnome-shell itself.
   #
-  # enableSystemSlice and enableRootSlice are deliberately left off: there oomd
-  # would be free to kill system services, and on a laptop the failure mode
-  # (losing NetworkManager or the display manager) is worse than the stall.
-  systemd.oomd.enableUserSlices = true;
+  # The result was oomd killing org.gnome.Shell@user.service outright, taking
+  # the entire desktop with it (457 processes in one event) and dropping the
+  # user back to the GDM greeter. Twice on 2026-08-08, at 03:24 and 09:48. The
+  # machine never rebooted — uptime was continuous — but it is indistinguishable
+  # from a reboot in use.
+  #
+  # Scoping the kill to app.slice instead of user.slice would be a no-op here,
+  # since app.slice is where the memory *isn't*. earlyoom below already covers
+  # this case correctly, so oomd stays opted out until GNOME actually places
+  # apps in their own scopes. Re-check with `oomctl` before re-enabling.
+  #
+  # enableSystemSlice and enableRootSlice remain off for the original reason:
+  # there oomd would be free to kill system services, and on a laptop the
+  # failure mode (losing NetworkManager or the display manager) is worse than
+  # the stall.
+  systemd.oomd.enableUserSlices = false;
 
-  # Second line of defence, on a different signal. oomd triggers on PSI stall
-  # ratios; earlyoom watches MemAvailable and free swap directly, so it catches
-  # cases where pressure never sustains long enough for oomd's 30s window.
-  # Overlapping on purpose — whichever notices first acts.
+  # With oomd opted out above, this is the only userspace layer acting before
+  # the kernel OOM killer. It watches MemAvailable and free swap directly
+  # rather than PSI stall ratios, and — the reason it is the one kept — it
+  # SIGTERMs individual processes instead of whole cgroups, so a kill costs one
+  # app rather than the session. Confirmed in practice: it took out single
+  # electron and rust-analyzer processes on 2026-08-06 and 2026-08-07 with the
+  # desktop left running.
   services.earlyoom = {
     enable = true;
     # Defaults: SIGTERM under 10% available memory, SIGKILL under 5%. On 15G
